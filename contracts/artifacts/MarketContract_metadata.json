@@ -1,0 +1,97 @@
+{
+	"compiler": {
+		"version": "0.7.0+commit.9e61f92b"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "contract TestToken",
+						"name": "_token",
+						"type": "address"
+					}
+				],
+				"name": "setToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"notice": "TODO MarketContract - rename TestToken - rename",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/contracts/MarketContract.sol": "MarketContract"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/contracts/MarketContract.sol": {
+			"keccak256": "0xcaf5e7d9cfa2f15842ba48bfd1cbf98011f2d27df48876ae64772cdddd9899cc",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8ae6bf99bb7d22d3b6cd3b606eb6bc6fc50f23472e0664f89ecb7be2fab05089",
+				"dweb:/ipfs/QmVjMs4oJT8EWevU4WrruMcwYY63ga7EauzoyFuDPC9eHy"
+			]
+		},
+		"localhost/contracts/TestToken.sol": {
+			"keccak256": "0x3a20e51347be46bfc4cd0aacecbcf9ced9013a042f56f276a5002d49b5ae8f9c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fe90c487cfa628b545775c5784918ebcc9f7450d31742cbbbf1400688a18d60c",
+				"dweb:/ipfs/QmevLrdyxgabbMeHtsTi6Sb9HuHMyRHQNpqNnpg8rLtvK8"
+			]
+		},
+		"localhost/node_modules/@openzeppelin/contracts/GSN/Context.sol": {
+			"keccak256": "0x910a2e625b71168563edf9eeef55a50d6d699acfe27ceba3921f291829a8f938",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://248246ac66e6479dce1ad7d4945ec5540c98ceb09881e93c93f7c48d5772925c",
+				"dweb:/ipfs/QmXr8tmUiZgEYid6ixeeBRmTdUnASWjKzhP3KRxMPy8fRt"
+			]
+		},
+		"localhost/node_modules/@openzeppelin/contracts/math/SafeMath.sol": {
+			"keccak256": "0xba96bc371ba999f452985a98717cca1e4c4abb598dc038a9a9c3db08129b1ba4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://26e50e3f7b6482fb6f598f2e006994a74aa492687daa4b3eee7fd4fb5398ce7f",
+				"dweb:/ipfs/QmZudqoPSkA4USLMFsBBmt19dDPZFS8aaAmL5R7pECXu6t"
+			]
+		},
+		"localhost/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xbd74f587ab9b9711801baf667db1426e4a03fd2d7f15af33e0e0d0394e7cef76",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2d0913dfbfce90d170df0d496ad7596c0778518e5fa7aba6c32562522546f66b",
+				"dweb:/ipfs/QmR6B8nLj2PJf5e1JWD9Nk7ErkAwkqUwadCnvE82FJr1RU"
+			]
+		}
+	},
+	"version": 1
+}
