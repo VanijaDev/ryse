@@ -6,9 +6,153 @@
 	"output": {
 		"abi": [
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "_recipient",
+						"type": "address"
+					}
+				],
+				"name": "BalanceWithdrawn",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "_recipient",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensBought",
+				"type": "event"
+			},
+			{
 				"inputs": [],
+				"name": "balance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokens",
+						"type": "uint256"
+					}
+				],
+				"name": "buyExactTokens",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "currentPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "kill",
+				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "constructor"
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_token",
+						"type": "uint256"
+					}
+				],
+				"name": "priceForExactToken",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokens",
+						"type": "uint256"
+					}
+				],
+				"name": "sellExactTokens",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
 			},
 			{
 				"inputs": [
@@ -22,17 +166,159 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "solidTokenPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "token",
+				"outputs": [
+					{
+						"internalType": "contract TestToken",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tokensBought",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokens",
+						"type": "uint256"
+					}
+				],
+				"name": "valueToBuyExactTokens",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "withdrawBalance",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
 			"kind": "dev",
-			"methods": {},
+			"methods": {
+				"balance()": {
+					"details": "Returns balance of the Smart Contract.",
+					"returns": {
+						"_0": "Balance of the Smart Contract."
+					}
+				},
+				"buyExactTokens(uint256)": {
+					"details": "Buys tokens.",
+					"params": {
+						"_tokens": "Token amount to be bought."
+					}
+				},
+				"currentPrice()": {
+					"details": "Returns price for the next token.",
+					"returns": {
+						"_0": "price for the next token."
+					}
+				},
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"priceForExactToken(uint256)": {
+					"details": "Returns price for exact token.",
+					"params": {
+						"_token": "Exact token to get price for."
+					},
+					"returns": {
+						"_0": "Price for exact token."
+					}
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"sellExactTokens(uint256)": {
+					"details": "Sells tokens.",
+					"params": {
+						"_tokens": "Token amount to be sold."
+					}
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				},
+				"valueToBuyExactTokens(uint256)": {
+					"details": "Calculates msg.value to be received for appropriate amount of tokens to be bought.",
+					"params": {
+						"_tokens": "Amount of tokens."
+					},
+					"returns": {
+						"_0": "msg.value to be received."
+					}
+				},
+				"withdrawBalance(uint256)": {
+					"details": "Withdraws balance portion.",
+					"params": {
+						"_amount": "Amount to be withdrawn."
+					}
+				}
+			},
 			"version": 1
 		},
 		"userdoc": {
 			"kind": "user",
 			"methods": {},
-			"notice": "TODO MarketContract - rename TestToken - rename",
+			"notice": "Flow Deploy Market Deploy Token(_market) Market.setToken(_token)",
 			"version": 1
 		}
 	},
@@ -53,19 +339,19 @@
 	},
 	"sources": {
 		"localhost/contracts/MarketContract.sol": {
-			"keccak256": "0xcaf5e7d9cfa2f15842ba48bfd1cbf98011f2d27df48876ae64772cdddd9899cc",
+			"keccak256": "0xc2e2f17d383ef959bafbd31a6c2cbfac6311ef91e3212b95af6435c8e95724c8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8ae6bf99bb7d22d3b6cd3b606eb6bc6fc50f23472e0664f89ecb7be2fab05089",
-				"dweb:/ipfs/QmVjMs4oJT8EWevU4WrruMcwYY63ga7EauzoyFuDPC9eHy"
+				"bzz-raw://d898d9abe7a990b4cb630751b2a5031f7f89ca89b8ce357ab0a722117784887a",
+				"dweb:/ipfs/QmcgdVb2vPZrLWhbBL32zrPD5oDdVBDELo8D2hx6qvQanh"
 			]
 		},
 		"localhost/contracts/TestToken.sol": {
-			"keccak256": "0x3a20e51347be46bfc4cd0aacecbcf9ced9013a042f56f276a5002d49b5ae8f9c",
+			"keccak256": "0xca24a17058821a23ba095cf69d26651d24b8c060c36fc76b45f3db21df8b2a29",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fe90c487cfa628b545775c5784918ebcc9f7450d31742cbbbf1400688a18d60c",
-				"dweb:/ipfs/QmevLrdyxgabbMeHtsTi6Sb9HuHMyRHQNpqNnpg8rLtvK8"
+				"bzz-raw://9d935f014c0c07bbd8039086c2c8d7ad96bc1284f0bc5021f5d91c5d6bcceecb",
+				"dweb:/ipfs/QmTUy7JrXDt1erAep3hEBkdqkfcQ1DuRJaEfrodV2AdSaR"
 			]
 		},
 		"localhost/node_modules/@openzeppelin/contracts/GSN/Context.sol": {
@@ -74,6 +360,14 @@
 			"urls": [
 				"bzz-raw://248246ac66e6479dce1ad7d4945ec5540c98ceb09881e93c93f7c48d5772925c",
 				"dweb:/ipfs/QmXr8tmUiZgEYid6ixeeBRmTdUnASWjKzhP3KRxMPy8fRt"
+			]
+		},
+		"localhost/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+			"keccak256": "0x74b0525c81e47810f1bd795755962bdb84de3a4f71cfcb063f4c4d4999a3e96b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1cd0b71a794900681c8bcc255599fac53c211fc6a530a58d7dd7246bfde6c4f5",
+				"dweb:/ipfs/QmdAB1mFyuN2i25DRf9szWgp1FLCByqJ4F8aYzXWe3mfTR"
 			]
 		},
 		"localhost/node_modules/@openzeppelin/contracts/math/SafeMath.sol": {
