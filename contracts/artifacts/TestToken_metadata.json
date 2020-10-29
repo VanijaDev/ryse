@@ -356,11 +356,11 @@
 	},
 	"sources": {
 		"localhost/contracts/TestToken.sol": {
-			"keccak256": "0xf6a964a906bd6116348680528ec53719d82df022ab797a5b378b25dd32f4a8fd",
+			"keccak256": "0xca24a17058821a23ba095cf69d26651d24b8c060c36fc76b45f3db21df8b2a29",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4e52da62c583ed29673f7838ca5f4f17ef7e49cd41c57cd1dc217839aa2a2cd6",
-				"dweb:/ipfs/QmcfiBCP8A6iNnHTvkn7QfvAeXr3yww9v3zxHQ2GGbNebv"
+				"bzz-raw://9d935f014c0c07bbd8039086c2c8d7ad96bc1284f0bc5021f5d91c5d6bcceecb",
+				"dweb:/ipfs/QmTUy7JrXDt1erAep3hEBkdqkfcQ1DuRJaEfrodV2AdSaR"
 			]
 		},
 		"localhost/node_modules/@openzeppelin/contracts/GSN/Context.sol": {
