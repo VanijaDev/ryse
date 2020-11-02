@@ -3,8 +3,7 @@
 pragma solidity ^0.7.0;
 
 import "./TestToken.sol";
-import "../node_modules/@openzeppelin/contracts/math/SafeMath.sol";
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "./DistrubutionPeriods.sol";
 
 /**
  * TODO
@@ -18,9 +17,9 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
   * Deploy Token(_market)
   * Market.setToken(_token)
  */
-contract MarketContract is Ownable {
+contract MarketContract is DistrubutionPeriods {
   using SafeMath for uint256;
-
+    
   TestToken public token;
 
   uint256 public solidTokenPrice = 500000000 gwei;    // 0.5 ETH
@@ -33,7 +32,9 @@ contract MarketContract is Ownable {
 
   event TokensBought(address _purchaser, uint256 _amount, uint256 _value);
   event TokensSold(address _seller, uint256 _amount, uint256 _value);
+  
 
+  constructor(uint256 _presaleStart, uint256 _saleStart) DistrubutionPeriods(_presaleStart, _saleStart) {}
 
   function setToken(TestToken _token) external onlyOwner {
     require(address(_token) != address(0), "_token cannt be 0");
@@ -48,6 +49,11 @@ contract MarketContract is Ownable {
     * @param _tokens Token amount to be bought.
     */
   function buyExactTokens(uint256 _tokens) public payable onlyMoreThanZero(_tokens) {
+    if (isPresalePeriod()) {
+      require(isPresaleAllowedFor(_msgSender()), "presale not allowed");
+    }
+
+    require(isSalePeriod(), "not sale period");
     require(msg.value == valueToBuyExactTokens(_tokens), "wrong buy value");
 
     token.transfer(_msgSender(), _tokens);
