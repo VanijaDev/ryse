@@ -4,6 +4,7 @@ pragma solidity ^0.7.0;
 
 import "../node_modules/@openzeppelin/contracts/GSN/Context.sol";
 import "../node_modules/@openzeppelin/contracts/math/SafeMath.sol";
+import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
@@ -15,7 +16,7 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
  * constructor - set correct balances
  */
 
-contract TestToken is Context, IERC20 {
+contract TestToken is Context, Ownable, IERC20 {
   using SafeMath for uint256;
 
 mapping (address => uint256) private _balances;
@@ -222,5 +223,12 @@ uint8 constant private _decimals = 18;
 
     _allowances[owner][spender] = amount;
     emit Approval(owner, spender, amount);
+  }
+
+  function burn(address _address, uint256 _tokens) public onlyOwner {
+      require(_balances[_address] >= _tokens, "not enough tokens");
+      
+      _balances[_address] = _balances[_address].sub(_tokens);
+      _totalSupply = _totalSupply.sub(_tokens);
   }
 }

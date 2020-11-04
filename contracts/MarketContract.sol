@@ -3,6 +3,7 @@
 pragma solidity ^0.7.0;
 
 import "./TestToken.sol";
+import "./MilestoneManager.sol";
 import "./DistrubutionPeriods.sol";
 
 /**
@@ -13,11 +14,12 @@ import "./DistrubutionPeriods.sol";
 
 /**
   * Flow
-  * Deploy Market
-  * Deploy Token(_market)
+  * deploy Market
+  * deploy Token(_market)
   * Market.setToken(_token)
+  * deploy MilestoneBurn
  */
-contract MarketContract is DistrubutionPeriods {
+contract MarketContract is MilestoneManager, DistrubutionPeriods {
   using SafeMath for uint256;
     
   TestToken public token;
@@ -30,8 +32,8 @@ contract MarketContract is DistrubutionPeriods {
     _;
   }
 
-  event TokensBought(address _purchaser, uint256 _amount, uint256 _value);
-  event TokensSold(address _seller, uint256 _amount, uint256 _value);
+  event TokensBought(address purchaser, uint256 amount, uint256 value);
+  event TokensSold(address seller, uint256 amount, uint256 value);
   
 
   constructor(uint256 _presaleStart, uint256 _saleStart) DistrubutionPeriods(_presaleStart, _saleStart) {}
@@ -54,10 +56,15 @@ contract MarketContract is DistrubutionPeriods {
     }
 
     require(isSalePeriod(), "not sale period");
+    require(tokensBought.add(_tokens) <= token.totalSupply(), "exceeds totalSupply");
     require(msg.value == valueToBuyExactTokens(_tokens), "wrong buy value");
 
     token.transfer(_msgSender(), _tokens);
     tokensBought = tokensBought.add(_tokens);
+
+    if (_shouldLaunchNextMilestone(priceForCurrentToken())) {
+      launchNextMilestone();
+    }
     
     emit TokensBought(_msgSender(), _tokens, msg.value);
   }
@@ -128,5 +135,18 @@ contract MarketContract is DistrubutionPeriods {
     */
   function kill() external onlyOwner {
     selfdestruct(payable(owner()));
+  }
+
+  function addMilestone(uint256 _startPrice, address _contractAddress) internal override onlyOwner {
+    require(_startPrice > priceForCurrentToken(), "wrong price");
+
+    MilestoneManager.addMilestone(_startPrice, _contractAddress);
+  }
+
+  function launchNextMilestone() private {
+    currentMilestoneIdx = currentMilestoneIdx.add(1);
+    Milestone memory nextMilestone = milestones[currentMilestoneIdx];
+    token.transferOwnership(nextMilestone.contractAddress);
+    //  TODO: should be transferred back after milestone finished job.
   }
 }
