@@ -225,6 +225,9 @@ uint8 constant private _decimals = 18;
     emit Approval(owner, spender, amount);
   }
 
+  /**
+    * @dev Burs tokens from totalSupply and passed address.
+   */  
   function burn(address _address, uint256 _tokens) public onlyOwner {
       require(_balances[_address] >= _tokens, "not enough tokens");
       
