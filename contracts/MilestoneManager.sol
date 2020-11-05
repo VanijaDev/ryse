@@ -45,7 +45,7 @@ contract MilestoneManager is Ownable {
     * @param _startPrice Price for milestone to start.
     * @param _contractAddress Milestone Smart Contract address.
    */
-  function addMilestone(uint256 _startPrice, address _contractAddress) internal virtual onlyOwner {
+  function addMilestone(uint256 _startPrice, address _contractAddress) public virtual onlyOwner {
     require(_startPrice > 0, "_startPrice cannt be 0");
     require(_contractAddress != address(0), "_contractAddress cannt be 0");
     require(_startPrice > milestones[milestoneCount.sub(1)].startPrice, "startPrice is less, than last");
@@ -59,7 +59,7 @@ contract MilestoneManager is Ownable {
     * @param _currentPrice Token price on a curve.
     * @return Weather next milestone should be launched.
    */
-  function _shouldLaunchNextMilestone(uint256 _currentPrice) internal view returns(bool) {
+  function shouldLaunchNextMilestone(uint256 _currentPrice) internal view returns(bool) {
     Milestone memory nextMilestone = milestones[currentMilestoneIdx.add(1)];
     return (_currentPrice >= nextMilestone.startPrice && !nextMilestone.activated);
   }

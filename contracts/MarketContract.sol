@@ -17,6 +17,7 @@ import "./DistrubutionPeriods.sol";
   * deploy Market
   * deploy Token(_market)
   * Market.setToken(_token)
+  * Token.transferOwnership(Market)
   * deploy MilestoneBurn
  */
 contract MarketContract is MilestoneManager, DistrubutionPeriods {
@@ -62,16 +63,17 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
   function buyExactTokens(uint256 _tokens) public payable onlyMoreThanZero(_tokens) {
     if (isPresalePeriod()) {
       require(isPresaleAllowedFor(_msgSender()), "presale not allowed");
+    } else {
+      require(isSalePeriod(), "not sale period");
     }
 
-    require(isSalePeriod(), "not sale period");
     require(tokensBought.add(_tokens) <= token.totalSupply(), "exceeds totalSupply");
     require(msg.value == valueToBuyExactTokens(_tokens), "wrong buy value");
 
     token.transfer(_msgSender(), _tokens);
     tokensBought = tokensBought.add(_tokens);
 
-    if (_shouldLaunchNextMilestone(priceForCurrentToken())) {
+    if (shouldLaunchNextMilestone(priceForCurrentToken())) {
       launchNextMilestone();
     }
     
@@ -151,7 +153,7 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
     * @param _startPrice Price for milestone to start.
     * @param _contractAddress Milestone Smart Contract address.
    */
-  function addMilestone(uint256 _startPrice, address _contractAddress) internal override onlyOwner {
+  function addMilestone(uint256 _startPrice, address _contractAddress) public override onlyOwner {
     require(_startPrice > priceForCurrentToken(), "wrong price");
 
     MilestoneManager.addMilestone(_startPrice, _contractAddress);
@@ -161,8 +163,7 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
     * @dev Launches next milestone.
    */
   function launchNextMilestone() internal override {
-    currentMilestoneIdx = currentMilestoneIdx.add(1);
-    Milestone memory nextMilestone = milestones[currentMilestoneIdx];
+    Milestone memory nextMilestone = milestones[currentMilestoneIdx.add(1)];
     token.transferOwnership(nextMilestone.contractAddress);
     super.launchNextMilestone();
   }
