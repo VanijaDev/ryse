@@ -26,6 +26,12 @@ contract MilestoneAirdrop is Ownable, IMilestone {
 
   event Airdropped(address recipient, uint256 amount);
 
+  /**
+    * @dev Contract constructor.
+    * @param _token Basic token address.
+    * @param _aToken Token for airdrop address.
+    * @param _marketContract Address for market Smart Contract.
+    */
   constructor(TestToken _token, aTestToken _aToken, address _marketContract) {
     require(address(_token) != address(0), "wrong _token");
     require(address(_aToken) != address(0), "wrong _aToken");
@@ -37,6 +43,9 @@ contract MilestoneAirdrop is Ownable, IMilestone {
     marketContract = _marketContract;
   }
 
+  /**
+    * @dev Claims tokens for airdrop.
+   */
   function claimTokens() external {
     require(claimStarted, "not started yet");
     require(!tokensClaimed[msg.sender], "already claimed");
@@ -49,12 +58,17 @@ contract MilestoneAirdrop is Ownable, IMilestone {
     emit Airdropped(msg.sender, originalTokens);
   }
 
+  /**
+    * @dev Destroys this Smart Contract.
+    */
   function _kill() private onlyOwner {
     aToken.transfer(owner(), aToken.balanceOf(address(this)));
     selfdestruct(payable(owner()));
   }
 
-  //  IMilestone
+  /**
+    * IMilestone 
+   */
   function launchMilestone() public override {
     require(msg.sender == address(marketContract), "wrong sender");
     claimStarted = true;
