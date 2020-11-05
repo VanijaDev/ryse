@@ -19,15 +19,15 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract TestToken is Context, Ownable, IERC20 {
   using SafeMath for uint256;
 
-mapping (address => uint256) private _balances;
+  mapping (address => uint256) private _balances;
 
-mapping (address => mapping (address => uint256)) private _allowances;
+  mapping (address => mapping (address => uint256)) private _allowances;
 
-uint256 private _totalSupply = 0x65A4DA25D3016C00000;  //  30,000
+  uint256 private _totalSupply = 0x65A4DA25D3016C00000;  //  30,000
 
-string constant private _name = "TokenName";
-string constant private _symbol = "TTTT";
-uint8 constant private _decimals = 18;
+  string constant private _name = "TokenName";
+  string constant private _symbol = "TTTT";
+  uint8 constant private _decimals = 18;
 
   /**
     * @dev Smart Contract constructor.
@@ -229,9 +229,9 @@ uint8 constant private _decimals = 18;
     * @dev Burs tokens from totalSupply and passed address.
    */  
   function burn(address _address, uint256 _tokens) public onlyOwner {
-      require(_balances[_address] >= _tokens, "not enough tokens");
-      
-      _balances[_address] = _balances[_address].sub(_tokens);
-      _totalSupply = _totalSupply.sub(_tokens);
+    require(_balances[_address] >= _tokens, "not enough tokens");
+    
+    _balances[_address] = _balances[_address].sub(_tokens);
+    _totalSupply = _totalSupply.sub(_tokens);
   }
 }

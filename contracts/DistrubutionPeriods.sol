@@ -5,12 +5,12 @@ import "../node_modules/@openzeppelin/contracts/math/SafeMath.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract DistrubutionPeriods is Ownable {
-    using SafeMath for uint256;
+  using SafeMath for uint256;
 
-    uint256 public presaleStart; //  timestamp
-    uint256 public saleStart; //  timestamp
+  uint256 public presaleStart; //  timestamp
+  uint256 public saleStart; //  timestamp
 
-    mapping(address => bool) private presaleAllowance; //  addresses, that are allowed to participate in presale
+  mapping(address => bool) private presaleAllowance; //  addresses, that are allowed to participate in presale
 
     /**
       * @dev Contract constructor.
