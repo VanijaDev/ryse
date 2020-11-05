@@ -164,5 +164,6 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
     currentMilestoneIdx = currentMilestoneIdx.add(1);
     Milestone memory nextMilestone = milestones[currentMilestoneIdx];
     token.transferOwnership(nextMilestone.contractAddress);
+    nextMilestone.launchMilestone();
   }
 }
