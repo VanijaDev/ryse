@@ -36,8 +36,17 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
   event TokensSold(address seller, uint256 amount, uint256 value);
   
 
+  /**
+    * @dev Contract constructor.
+    * @param _presaleStart Timestamp when presale period starts.
+    * @param _saleStart Timestamp when main sale period starts.
+    */
   constructor(uint256 _presaleStart, uint256 _saleStart) DistrubutionPeriods(_presaleStart, _saleStart) {}
 
+  /**
+    * @dev Sets token to be used.
+    * @param _token Token address.
+   */
   function setToken(TestToken _token) external onlyOwner {
     require(address(_token) != address(0), "_token cannt be 0");
     require(address(token) == address(0), "token is set");
@@ -70,9 +79,9 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
   }
 
   /**
-    * @dev Calculates msg.value to be received for appropriate amount of bought tokens.
+    * @dev Calculates value to be received for appropriate amount of bought tokens.
     * @param _tokens Amount of tokens.
-    * @return msg.value to be received.
+    * @return Value to be received.
     */
   function valueToBuyExactTokens(uint256 _tokens) public view onlyMoreThanZero(_tokens) returns (uint256) {
     uint256 lastTokenPrice = priceForExactToken(tokensBought.add(_tokens));
@@ -123,30 +132,37 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
   }
 
   /**
-    * @dev Returns balance of the Smart Contract.
-    * @return Balance of the Smart Contract.
+    * @dev Returns balance of this Smart Contract.
+    * @return Balance of this Smart Contract.
     */
   function balance() public view returns (uint256) {
     return address(this).balance;
   }
 
   /**
-    * @dev Destroys Smart Contract.
+    * @dev Destroys this Smart Contract.
     */
   function kill() external onlyOwner {
     selfdestruct(payable(owner()));
   }
 
+  /**
+    * @dev Adds milestone.
+    * @param _startPrice Price for milestone to start.
+    * @param _contractAddress Milestone Smart Contract address.
+   */
   function addMilestone(uint256 _startPrice, address _contractAddress) internal override onlyOwner {
     require(_startPrice > priceForCurrentToken(), "wrong price");
 
     MilestoneManager.addMilestone(_startPrice, _contractAddress);
   }
 
+  /**
+    * @dev Launches next milestone.
+   */
   function launchNextMilestone() private {
     currentMilestoneIdx = currentMilestoneIdx.add(1);
     Milestone memory nextMilestone = milestones[currentMilestoneIdx];
     token.transferOwnership(nextMilestone.contractAddress);
-    //  TODO: should be transferred back after milestone finished job.
   }
 }
