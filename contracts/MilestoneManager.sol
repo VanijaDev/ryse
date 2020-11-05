@@ -18,17 +18,30 @@ contract MilestoneManager is Ownable {
   uint256 public milestoneCount;
   mapping (uint256 => Milestone) internal milestones;
 
+  /**
+    * @dev Contract constructor.
+    */
   constructor() {
     milestones[milestoneCount] = Milestone(0, address(0), true);  //  first one is default
     milestoneCount = milestoneCount.add(1);
   }
 
+  /**
+    * @dev Returns milestone data at index.
+    * @param _idx Milestone index.
+    * @return Milestone data at index.
+    */
   function milestoneAtIdx(uint256 _idx) public view returns (uint256 startPrice, address contractAddress, bool activated) {
     startPrice = milestones[_idx].startPrice;
     contractAddress = milestones[_idx].contractAddress;
     activated = milestones[_idx].activated;
   }
 
+  /**
+    * @dev Adds milestone.
+    * @param _startPrice Price for milestone to start.
+    * @param _contractAddress Milestone Smart Contract address.
+   */
   function addMilestone(uint256 _startPrice, address _contractAddress) internal virtual onlyOwner {
     require(_startPrice > 0, "_startPrice cannt be 0");
     require(_contractAddress != address(0), "_contractAddress cannt be 0");
@@ -38,7 +51,12 @@ contract MilestoneManager is Ownable {
     milestoneCount = milestoneCount.add(1);
   }
 
-  function _shouldLaunchNextMilestone(uint256 _currentPrice) internal view returns(bool) {  //  TODO: check for current price
+  /**
+    * @dev Checks if next milestone should be launched.
+    * @param _currentPrice Token price on a curve.
+    * @return Weather next milestone should be launched.
+   */
+  function _shouldLaunchNextMilestone(uint256 _currentPrice) internal view returns(bool) {
     Milestone memory nextMilestone = milestones[currentMilestoneIdx.add(1)];
     return (_currentPrice >= nextMilestone.startPrice && !nextMilestone.activated);
   }
