@@ -70,15 +70,18 @@ contract MilestoneAirdrop is Ownable, IMilestone {
     * IMilestone 
    */
   function launchMilestone() public override {
-    require(msg.sender == address(marketContract), "wrong sender");
+    require(msg.sender == marketContract, "wrong sender");
+    require(token.owner() == address(this), "not token owner");
+    
     claimStarted = true;
+    transferTokenOwnership();
   }
 
   function transferTokenOwnership() internal override {
-    token.transferOwnership(address(marketContract));
+    token.transferOwnership(marketContract);
   }
   
-  function finishMilestone() public override {
+  function finishMilestone() public onlyOwner override {
     _kill();
   }
 }
