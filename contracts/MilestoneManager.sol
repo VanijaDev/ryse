@@ -2,6 +2,7 @@
 
 pragma solidity ^0.7.0;
 
+import "./IMilestone.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/math/SafeMath.sol";
 
@@ -29,7 +30,9 @@ contract MilestoneManager is Ownable {
   /**
     * @dev Returns milestone data at index.
     * @param _idx Milestone index.
-    * @return Milestone data at index.
+    * @return startPrice StartPrice data at index.
+    * @return contractAddress cCntractAddress data at index.
+    * @return activated Activated data at index.
     */
   function milestoneAtIdx(uint256 _idx) public view returns (uint256 startPrice, address contractAddress, bool activated) {
     startPrice = milestones[_idx].startPrice;
@@ -59,5 +62,14 @@ contract MilestoneManager is Ownable {
   function _shouldLaunchNextMilestone(uint256 _currentPrice) internal view returns(bool) {
     Milestone memory nextMilestone = milestones[currentMilestoneIdx.add(1)];
     return (_currentPrice >= nextMilestone.startPrice && !nextMilestone.activated);
+  }
+  
+  /**
+    * @dev Launches next milestone.
+   */
+  function launchNextMilestone() internal virtual {
+    currentMilestoneIdx = currentMilestoneIdx.add(1);
+    Milestone memory nextMilestone = milestones[currentMilestoneIdx];
+    IMilestone(nextMilestone.contractAddress).launchMilestone();
   }
 }

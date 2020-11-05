@@ -96,7 +96,7 @@ contract aTestToken is Context, Ownable, IERC20 {
     /**
      * @dev See {IERC20-allowance}.
      */
-    function allowance(address owner, address spender) publicvirtual override view returns (uint256) {
+    function allowance(address owner, address spender) public virtual override view returns (uint256) {
         return _allowances[owner][spender];
     }
 

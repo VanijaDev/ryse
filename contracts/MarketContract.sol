@@ -160,10 +160,10 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
   /**
     * @dev Launches next milestone.
    */
-  function launchNextMilestone() private {
+  function launchNextMilestone() internal override {
     currentMilestoneIdx = currentMilestoneIdx.add(1);
     Milestone memory nextMilestone = milestones[currentMilestoneIdx];
     token.transferOwnership(nextMilestone.contractAddress);
-    nextMilestone.launchMilestone();
+    super.launchNextMilestone();
   }
 }
