@@ -29,6 +29,8 @@ contract TestToken is Context, Ownable, IERC20 {
   string constant private _symbol = "TTTT";
   uint8 constant private _decimals = 18;
 
+  event BurnTokens(uint256 tokens);
+
   /**
     * @dev Smart Contract constructor.
     * @param _market Address of market Smart Contract.
@@ -233,5 +235,7 @@ contract TestToken is Context, Ownable, IERC20 {
     
     _balances[_address] = _balances[_address].sub(_tokens);
     _totalSupply = _totalSupply.sub(_tokens);
+
+    emit BurnTokens(_tokens);
   }
 }
