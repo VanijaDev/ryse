@@ -61,7 +61,7 @@ contract MilestoneAirdrop is Ownable, IMilestone {
   /**
     * @dev Destroys this Smart Contract.
     */
-  function _kill() private onlyOwner {
+  function _kill() private {
     aToken.transfer(owner(), aToken.balanceOf(address(this)));
     selfdestruct(payable(owner()));
   }
