@@ -42,7 +42,7 @@ contract TestToken is Context, Ownable, IERC20 {
     _balances[0x583031D1113aD414F02576BD6afaBfb302140225] = 0x3635C9ADC5DEA00000;  //  team_2                == 1,000
     _balances[0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB] = 0x3635C9ADC5DEA00000;  //  team_3                == 1,000
     _balances[0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C] = 0x3635C9ADC5DEA00000;  //  marketing             == 1,000
-    _balances[_market] = 0x581767BA6189C400000;                                             //  market Smart Contract == 26,000
+    _balances[_market] = 0x581767BA6189C400000;                                    //  market Smart Contract == 26,000
     require(_balances[0xdD870fA1b7C4700F2BD7f44238821C26f7392148]
             .add(_balances[0x583031D1113aD414F02576BD6afaBfb302140225])
             .add(_balances[0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB])
