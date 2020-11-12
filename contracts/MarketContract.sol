@@ -25,8 +25,8 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
     
   TestToken public token;
 
-  uint256 public solidTokenPrice = 500000000 gwei;    // 0.5 ETH
-  uint256 public tokensBought = 10;
+  uint256 public tokenPrice = 10000 gwei;  //  0.00001 ETH
+  uint256 public tokensBought;
 
   modifier onlyMoreThanZero(uint256 _amount) {
     require(_amount > 0, "must be > 0");
@@ -58,71 +58,76 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
 
   /**
     * @dev Buys tokens.
-    * @param _tokens Token amount to be bought.
+    * @param _tokensOut Tokens desired to be bought.
+    * @param _tokensOutMin Tokens minimum to be bought.
     */
-  function buyExactTokens(uint256 _tokens) public payable onlyMoreThanZero(_tokens) {
-    if (isPresalePeriod()) {
-      require(isPresaleAllowedFor(_msgSender()), "presale not allowed");
-    } else {
-      require(isSalePeriod(), "not sale period");
+  function buyTokens(uint256 _tokensOut, uint256 _tokensOutMin) public payable onlyMoreThanZero(_tokensOutMin) {
+    uint256 nextTokenPrice = priceForExactToken(tokensBought.add(1));
+    uint256 lastTokenPrice = priceForExactToken(tokensBought.add(_tokensOut));
+    uint256 tokens = msg.value.div((lastTokenPrice.sub(nextTokenPrice)).div(2).add(nextTokenPrice));
+    require(tokens >= _tokensOutMin, "less than min");
+    
+    uint256 validValueForTokens = valueToBuyExactTokens(tokens);
+    require(msg.value >= validValueForTokens, "value required < msg.value");
+    
+    uint256 valueDiff = msg.value.sub(validValueForTokens);
+    if (valueDiff > 0) {
+      msg.sender.transfer(valueDiff);
     }
 
-    require(tokensBought.add(_tokens) <= token.totalSupply(), "exceeds totalSupply");
-    require(msg.value == valueToBuyExactTokens(_tokens), "wrong buy value");
+    token.transfer(_msgSender(), tokens);
+    tokensBought = tokensBought.add(tokens);
 
-    token.transfer(_msgSender(), _tokens);
-    tokensBought = tokensBought.add(_tokens);
-
-    if (shouldLaunchNextMilestone(priceForCurrentToken())) {
+    if (shouldLaunchNextMilestone(priceForExactToken(tokensBought))) {
       launchNextMilestone();
     }
     
-    emit TokensBought(_msgSender(), _tokens, msg.value);
+    emit TokensBought(_msgSender(), tokens, msg.value);
   }
 
   /**
-    * @dev Calculates value to be received for appropriate amount of bought tokens.
+    * @dev Calculated value to be paid for appropriate amount of bought tokens.
     * @param _tokens Amount of tokens.
-    * @return Value to be received.
+    * @return Value to be paid.
     */
   function valueToBuyExactTokens(uint256 _tokens) public view onlyMoreThanZero(_tokens) returns (uint256) {
+    uint256 nextTokenPrice = priceForExactToken(tokensBought.add(1));
     uint256 lastTokenPrice = priceForExactToken(tokensBought.add(_tokens));
-    return lastTokenPrice.sub(priceForCurrentToken());
-  }
-
-  /**
-    * @dev Sells tokens.
-    * @param _tokens Token amount to be sold.
-    */
-  function sellExactTokens(uint256 _tokens) public onlyMoreThanZero(_tokens) {
-    uint256 transferValue = valueToSellExactTokens(_tokens);
-    require(balance() >= transferValue, "not enough balance");
-    require(token.allowance(_msgSender(), address(this)) >= _tokens, "amount not allowed");
     
-    token.transferFrom(_msgSender(), address(this), _tokens);
-    tokensBought = tokensBought.sub(_tokens);
-    _msgSender().transfer(transferValue);
-
-    emit TokensSold(_msgSender(), _tokens, transferValue);
+    return (nextTokenPrice.add((lastTokenPrice.sub(nextTokenPrice)).div(2))).mul(_tokens);
   }
 
-  /**
-    * @dev Calculates value to be paid for appropriate amount of sold tokens.
-    * @param _tokens Amount of tokens.
-    * @return Value to be received.
-    */
-  function valueToSellExactTokens(uint256 _tokens) public view onlyMoreThanZero(_tokens) returns (uint256) {
-    uint256 lastTokenPrice = priceForExactToken(tokensBought.sub(_tokens));
-    return priceForCurrentToken().sub(lastTokenPrice);
-  }
+   /**
+     * @dev Sells tokens.
+     * @param _tokens Token amount to be sold.
+     * @param _ethOutMin Ether amount min to be received.
+     */
+   function sellTokens(uint256 _tokens, uint256 _ethOutMin) public onlyMoreThanZero(_tokens) {
+     require(token.balanceOf(msg.sender) >= _tokens, "not enough tokens");
+     
+     uint256 ethOut = valueToSellExactTokens(_tokens);
+     require(ethOut >= _ethOutMin, "ethOut < _ethOutMin");
+     require(balance() >= ethOut, "not enough balance");
+     require(token.allowance(_msgSender(), address(this)) >= _tokens, "amount not allowed");
+    
+     token.transferFrom(_msgSender(), address(this), _tokens);
+     tokensBought = tokensBought.sub(_tokens);
+     _msgSender().transfer(ethOut);
 
-  /**
-    * @dev Returns price for the next token.
-    * @return price for the next token.
-    */
-  function priceForCurrentToken() public view returns (uint256) {
-    return solidTokenPrice.mul(tokensBought.add(1)).div(1 ether);
-  }
+     emit TokensSold(_msgSender(), _tokens, ethOut);
+   }
+
+   /**
+     * @dev Calculates value to be received for appropriate amount of sold tokens.
+     * @param _tokens Amount of tokens.
+     * @return Value to be received.
+     */
+   function valueToSellExactTokens(uint256 _tokens) public view onlyMoreThanZero(_tokens) returns (uint256) {
+    uint256 currentTokenPrice = priceForExactToken(tokensBought);
+    uint256 lastTokenPrice = priceForExactToken(tokensBought.sub(_tokens).add(1));
+    
+    return (lastTokenPrice.add((currentTokenPrice.sub(lastTokenPrice)).div(2))).mul(_tokens);
+   }
 
   /**
     * @dev Returns price for exact token.
@@ -130,7 +135,7 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
     * @return Price for exact token.
     */
   function priceForExactToken(uint256 _token) public view returns (uint256) {
-    return solidTokenPrice.mul(_token).div(1 ether);
+    return tokenPrice.mul(_token);
   }
 
   /**
@@ -154,7 +159,7 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
     * @param _contractAddress Milestone Smart Contract address.
    */
   function addMilestone(uint256 _startPrice, address _contractAddress) public override onlyOwner {
-    require(_startPrice > priceForCurrentToken(), "wrong price");
+    require(_startPrice > priceForExactToken(tokensBought), "wrong price");
 
     MilestoneManager.addMilestone(_startPrice, _contractAddress);
   }
@@ -164,7 +169,9 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
    */
   function launchNextMilestone() internal override {
     Milestone memory nextMilestone = milestones[currentMilestoneIdx.add(1)];
-    token.transferOwnership(nextMilestone.contractAddress);
+    if(IMilestone(nextMilestone.contractAddress).requireTokenOwnership()) {
+      token.transferOwnership(nextMilestone.contractAddress);
+    }
     super.launchNextMilestone();
   }
 }

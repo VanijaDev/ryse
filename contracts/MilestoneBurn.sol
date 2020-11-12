@@ -27,6 +27,7 @@ contract MilestoneBurn is IMilestone {
     require(address(_token) != address(0), "wrong _token");
     require(_burnPercent > 0 && _burnPercent < 100, "wrong _burnPercentage");
 
+    requireTokenOwnership = true;
     burnPercent = _burnPercent;
     deployer = msg.sender;
     marketContract = _marketContract;

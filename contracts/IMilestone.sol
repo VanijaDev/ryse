@@ -3,6 +3,8 @@
 pragma solidity ^0.7.0;
 
 abstract contract IMilestone {
+    bool public requireTokenOwnership;
+
     /**
      * @dev Implements functional to launch the milestone.
      */

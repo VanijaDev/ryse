@@ -20,7 +20,7 @@ contract MilestoneAirdrop is Ownable, IMilestone {
 
   TestToken public token;
   aTestToken public aToken;
-  address public marketContract;
+  address public marketContractAddress;
 
   mapping(address => bool) public tokensClaimed;
 
@@ -30,17 +30,17 @@ contract MilestoneAirdrop is Ownable, IMilestone {
     * @dev Contract constructor.
     * @param _token Basic token address.
     * @param _aToken Token for airdrop address.
-    * @param _marketContract Address for market Smart Contract.
+    * @param _marketContractAddress Address for market Smart Contract.
     */
-  constructor(TestToken _token, aTestToken _aToken, address _marketContract) {
+  constructor(TestToken _token, aTestToken _aToken, address _marketContractAddress) {
     require(address(_token) != address(0), "wrong _token");
     require(address(_aToken) != address(0), "wrong _aToken");
-    require(_marketContract != address(0), "wrong _marketContract");
+    require(_marketContractAddress != address(0), "wrong _marketContractAddress");
 
     _deployer = msg.sender;
     token = _token;
     aToken = _aToken;
-    marketContract = _marketContract;
+    marketContractAddress = _marketContractAddress;
   }
 
   /**
@@ -70,15 +70,14 @@ contract MilestoneAirdrop is Ownable, IMilestone {
     * IMilestone 
    */
   function launchMilestone() public override {
-    require(msg.sender == marketContract, "wrong sender");
-    require(token.owner() == address(this), "not token owner");
+    require(msg.sender == marketContractAddress, "wrong sender");
+    require(token.owner() == marketContractAddress, "wrong token owner");
     
     claimStarted = true;
     transferTokenOwnership();
   }
 
   function transferTokenOwnership() internal override {
-    token.transferOwnership(marketContract);
   }
   
   function finishMilestone() public onlyOwner override {
