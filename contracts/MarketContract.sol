@@ -62,6 +62,12 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
     * @param _tokensOutMin Tokens minimum to be bought.
     */
   function buyTokens(uint256 _tokensOut, uint256 _tokensOutMin) public payable onlyMoreThanZero(_tokensOutMin) {
+    if (isPresalePeriod()) {
+      require(isPresaleAllowedFor(_msgSender()), "presale not allowed");
+    } else {
+      require(isSalePeriod(), "not sale period");
+    }
+
     uint256 nextTokenPrice = priceForExactToken(tokensBought.add(1));
     uint256 lastTokenPrice = priceForExactToken(tokensBought.add(_tokensOut));
     uint256 tokens = msg.value.div((lastTokenPrice.sub(nextTokenPrice)).div(2).add(nextTokenPrice));
