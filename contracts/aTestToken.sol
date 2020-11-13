@@ -23,14 +23,16 @@ contract aTestToken is Context, Ownable, IERC20 {
 
     mapping(address => mapping(address => uint256)) private _allowances;
 
-    uint256 private _totalSupply = 0x65A4DA25D3016C00000; //  30,000
+    uint256 private _totalSupply; // should be equal to base token
 
     string private constant _name = "aTokenName";
     string private constant _symbol = "aTTT";
     uint8 private constant _decimals = 18;
 
-    constructor () {
-    _balances[msg.sender] = _totalSupply;
+    constructor (uint256 _aTotalSupply) {
+    require(_aTotalSupply > 0, "wrong totalSupply");
+    _totalSupply = _aTotalSupply;
+    _balances[msg.sender] = _aTotalSupply;
 
   }
 
