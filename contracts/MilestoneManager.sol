@@ -23,7 +23,7 @@ contract MilestoneManager is Ownable {
     * @dev Contract constructor.
     */
   constructor() {
-    milestones[milestoneCount] = Milestone(0, address(0), true);  //  first one is default
+    milestones[milestoneCount] = Milestone(0, address(0), true);  //  first one is default sale
     milestoneCount = milestoneCount.add(1);
   }
 
@@ -69,7 +69,8 @@ contract MilestoneManager is Ownable {
    */
   function launchNextMilestone() internal virtual {
     currentMilestoneIdx = currentMilestoneIdx.add(1);
-    Milestone memory nextMilestone = milestones[currentMilestoneIdx];
+    Milestone storage nextMilestone = milestones[currentMilestoneIdx];
+    nextMilestone.activated = true;
     IMilestone(nextMilestone.contractAddress).launchMilestone();
   }
 }
