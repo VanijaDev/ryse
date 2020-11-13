@@ -15,14 +15,14 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
  */
 
 contract MilestoneAirdrop is Ownable, IMilestone {
-  bool public claimStarted;
+  bool public airdropStarted;
   address public _deployer;
 
   TestToken public token;
   aTestToken public aToken;
   address public marketContractAddress;
 
-  mapping(address => bool) public tokensClaimed;
+  mapping(address => bool) public tokensAirdropped;
 
   event Airdropped(address recipient, uint256 amount);
 
@@ -47,9 +47,9 @@ contract MilestoneAirdrop is Ownable, IMilestone {
     * @dev Claims tokens for airdrop.
    */
   function claimTokens() external {
-    require(claimStarted, "not started yet");
-    require(!tokensClaimed[msg.sender], "already claimed");
-    tokensClaimed[msg.sender] = true;
+    require(airdropStarted, "not started yet");
+    require(!tokensAirdropped[msg.sender], "already claimed");
+    tokensAirdropped[msg.sender] = true;
 
     uint256 originalTokens = token.balanceOf(msg.sender);
     require(originalTokens > 0, "nothing to claim");
@@ -73,8 +73,7 @@ contract MilestoneAirdrop is Ownable, IMilestone {
     require(msg.sender == marketContractAddress, "wrong sender");
     require(token.owner() == marketContractAddress, "wrong token owner");
     
-    claimStarted = true;
-    transferTokenOwnership();
+    airdropStarted = true;
   }
 
   function transferTokenOwnership() internal override {
