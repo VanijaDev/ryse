@@ -27,7 +27,7 @@ contract TestToken is Context, Ownable, IERC20 {
 
   string constant private _name = "TokenName";
   string constant private _symbol = "TTTT";
-  uint8 constant private _decimals = 18;
+  uint8 constant private _decimals = 1;
 
   event BurnTokens(uint256 tokens);
 
