@@ -27,7 +27,7 @@ contract aTestToken is Context, Ownable, IERC20 {
 
     string private constant _name = "aTokenName";
     string private constant _symbol = "aTTT";
-    uint8 private constant _decimals = 18;
+    uint8 private constant _decimals = 1;
 
     constructor (uint256 _aTotalSupply) {
     require(_aTotalSupply > 0, "wrong totalSupply");
