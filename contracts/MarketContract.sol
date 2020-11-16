@@ -42,18 +42,8 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
     * @param _presaleStart Timestamp when presale period starts.
     * @param _saleStart Timestamp when main sale period starts.
     */
-  constructor(uint256 _presaleStart, uint256 _saleStart) DistrubutionPeriods(_presaleStart, _saleStart) {}
-
-  /**
-    * @dev Sets token to be used.
-    * @param _token Token address.
-   */
-  function setToken(TestToken _token) external onlyOwner {
-    require(address(_token) != address(0), "_token cannt be 0");
-    require(address(token) == address(0), "token is set");
-
-    token = _token;
-    require(token.balanceOf(address(this)) == 0x581767BA6189C400000, "wrong balance");
+  constructor(uint256 _presaleStart, uint256 _saleStart) DistrubutionPeriods(_presaleStart, _saleStart) {
+    token = new TestToken();
   }
 
   /**

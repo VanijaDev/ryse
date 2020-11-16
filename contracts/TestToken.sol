@@ -32,22 +32,19 @@ contract TestToken is Context, Ownable, IERC20 {
   event BurnTokens(uint256 tokens);
 
   /**
-    * @dev Smart Contract constructor.
-    * @param _market Address of market Smart Contract.
+    * @dev Smart Contract constructor. _msgSender() should be Market Smart Contract
     */
-  constructor (address _market) {
-    require(_market != address(0), "cannt be 0");
-
+  constructor () {
     _balances[0xdD870fA1b7C4700F2BD7f44238821C26f7392148] = 0x2710;  //  team_1                == 1,000.0, TODO: set correct address
     _balances[0x583031D1113aD414F02576BD6afaBfb302140225] = 0x2710;  //  team_2                == 1,000.0, TODO: set correct address
     _balances[0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB] = 0x2710;  //  team_3                == 1,000.0, TODO: set correct address
     _balances[0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C] = 0x2710;  //  marketing             == 1,000.0, TODO: set correct address
-    _balances[_market] = 0x3F7A0;                                    //  market Smart Contract == 26,000.0
+    _balances[_msgSender()] = 0x3F7A0;                                    //  market Smart Contract == 26,000.0
     require(_balances[0xdD870fA1b7C4700F2BD7f44238821C26f7392148]
             .add(_balances[0x583031D1113aD414F02576BD6afaBfb302140225])
             .add(_balances[0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB])
             .add(_balances[0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C])
-            .add(_balances[_market]) == 0x493E0, "wrong balances");
+            .add(_balances[_msgSender()]) == 0x493E0, "wrong balances");
   }
 
   /**
