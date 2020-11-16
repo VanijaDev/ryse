@@ -15,6 +15,8 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
  */
 
 contract MilestoneAirdrop is Ownable, IMilestone {
+  using SafeMath for uint256;
+    
   bool public airdropStarted;
   address public _deployer;
 
@@ -22,7 +24,7 @@ contract MilestoneAirdrop is Ownable, IMilestone {
   aTestToken public aToken;
   address public marketContractAddress;
 
-  mapping(address => bool) public tokensAirdropped;
+  mapping(address => uint256) public tokensAirdropped;
 
   event Airdropped(address recipient, uint256 amount);
 
@@ -48,11 +50,12 @@ contract MilestoneAirdrop is Ownable, IMilestone {
    */
   function claimTokens() external {
     require(airdropStarted, "not started yet");
-    require(!tokensAirdropped[msg.sender], "already claimed");
-    tokensAirdropped[msg.sender] = true;
 
     uint256 originalTokens = token.balanceOf(msg.sender);
-    require(originalTokens > 0, "nothing to claim");
+    uint256 tokensToClaim = originalTokens.sub(tokensAirdropped[msg.sender]);
+    require(tokensToClaim > 0, "nothing to claim");
+
+    tokensAirdropped[msg.sender] = originalTokens;
 
     aToken.transfer(msg.sender, originalTokens);
     emit Airdropped(msg.sender, originalTokens);
