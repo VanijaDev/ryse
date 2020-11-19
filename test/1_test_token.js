@@ -11,6 +11,8 @@ contract("TestToken", function (accounts) {
   let token;
 
   beforeEach("deploy contract", async function () {
+    await time.advanceBlock();
+    
     MARKET = await MarketContract.new((await time.latest()) + 1, (await time.latest()) + 2);
     token = await TestToken.at(await MARKET.token.call());
   });
@@ -77,9 +79,9 @@ contract("TestToken", function (accounts) {
   //     let tokensToBurn = balanceBefore.mul(new BN("2")).div(new BN("100"));
   //     const receipt = await token.burn(MARKET.address, tokensToBurn);
 
-  //     expectEvent(receipt, 'BurnTokens', {
-  //       tokens: tokensToBurn.toString()
-  //     });
+      // expectEvent(receipt, 'BurnTokens', {
+      //   tokens: tokensToBurn.toString()
+      // });
   //   });
   // });
 });

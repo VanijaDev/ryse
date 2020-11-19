@@ -19,6 +19,8 @@ contract MilestoneManager is Ownable {
   uint256 public milestoneCount;
   mapping (uint256 => Milestone) internal milestones;
 
+  event MilestoneLaunched(address milestone);
+
   /**
     * @dev Contract constructor.
     */
@@ -59,8 +61,10 @@ contract MilestoneManager is Ownable {
     * @return Weather next milestone should be launched.
    */
   function shouldLaunchNextMilestone(uint256 _currentPrice) internal view returns(bool) {
-    Milestone memory nextMilestone = milestones[currentMilestoneIdx.add(1)];
-    return (_currentPrice >= nextMilestone.startPrice && !nextMilestone.activated);
+    if (currentMilestoneIdx.add(1) < milestoneCount) {
+      Milestone memory nextMilestone = milestones[currentMilestoneIdx.add(1)];
+      return (_currentPrice >= nextMilestone.startPrice && !nextMilestone.activated);
+    }
   }
   
   /**
@@ -71,5 +75,7 @@ contract MilestoneManager is Ownable {
     Milestone storage nextMilestone = milestones[currentMilestoneIdx];
     nextMilestone.activated = true;
     IMilestone(nextMilestone.contractAddress).launchMilestone();
+
+    emit MilestoneLaunched(nextMilestone.contractAddress);
   }
 }

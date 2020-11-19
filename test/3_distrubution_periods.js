@@ -15,8 +15,8 @@ contract("DistrubutionPeriods", function (accounts) {
   beforeEach("deploy contract", async function () {
     await time.advanceBlock();
 
-    PRESALE_START = ((await time.latest()).add(time.duration.seconds(1)));
-    SALE_START = ((await time.latest()).add(time.duration.minutes(1)));
+    PRESALE_START = ((await time.latest()).add(time.duration.seconds(2)));
+    SALE_START = ((await time.latest()).add(time.duration.minutes(5)));
 
     market = await MarketContract.new(PRESALE_START, SALE_START);
   });

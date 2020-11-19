@@ -96,13 +96,13 @@ contract MarketContract is MilestoneManager, DistrubutionPeriods {
    /**
      * @dev Sells tokens.
      * @param _tokens Token amount to be sold.
-     * @param _ethOutMin Ether amount min to be received.
+     * @param _valueOutMin Wei amount min to be received.
      */
-   function sellTokens(uint256 _tokens, uint256 _ethOutMin) public onlyMoreThanZero(_tokens) {
+   function sellTokens(uint256 _tokens, uint256 _valueOutMin) public onlyMoreThanZero(_tokens) onlyMoreThanZero(_valueOutMin) {
      require(token.balanceOf(msg.sender) >= _tokens, "not enough tokens");
      
      uint256 ethOut = valueToSellExactTokens(_tokens);
-     require(ethOut >= _ethOutMin, "ethOut < _ethOutMin");
+     require(ethOut >= _valueOutMin, "ethOut < _valueOutMin");
      require(balance() >= ethOut, "not enough balance");
      require(token.allowance(_msgSender(), address(this)) >= _tokens, "amount not allowed");
     

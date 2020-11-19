@@ -1,6 +1,6 @@
 const aTestToken = artifacts.require("aTestToken");
 
-const { BN, expectRevert } = require('@openzeppelin/test-helpers');
+const { BN, time, expectRevert } = require('@openzeppelin/test-helpers');
 const { assert } = require('chai');
 
 contract("aTestToken", function (accounts) {
@@ -9,6 +9,8 @@ contract("aTestToken", function (accounts) {
   let aToken;
 
   beforeEach("deploy contract", async function () {
+    await time.advanceBlock();
+    
     aToken = await aTestToken.new(TOTAL_SUPPLY);
   });
 
