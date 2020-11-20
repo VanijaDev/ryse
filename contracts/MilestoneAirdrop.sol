@@ -18,7 +18,6 @@ contract MilestoneAirdrop is Ownable, IMilestone {
   using SafeMath for uint256;
     
   bool public airdropStarted;
-  address public _deployer;
 
   TestToken public token;
   aTestToken public aToken;
@@ -39,7 +38,6 @@ contract MilestoneAirdrop is Ownable, IMilestone {
     require(address(_aToken) != address(0), "wrong _aToken");
     require(_marketContractAddress != address(0), "wrong _marketContractAddress");
 
-    _deployer = msg.sender;
     token = _token;
     aToken = _aToken;
     marketContractAddress = _marketContractAddress;
@@ -57,8 +55,8 @@ contract MilestoneAirdrop is Ownable, IMilestone {
 
     tokensAirdropped[msg.sender] = originalTokens;
 
-    aToken.transfer(msg.sender, originalTokens);
-    emit Airdropped(msg.sender, originalTokens);
+    aToken.transfer(msg.sender, tokensToClaim);
+    emit Airdropped(msg.sender, tokensToClaim);
   }
 
   /**
