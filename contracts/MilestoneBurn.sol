@@ -34,13 +34,12 @@ contract MilestoneBurn is IMilestone {
     token = _token;
   }
 
-
   //  IMilestone
   function launchMilestone() public override {
     require(msg.sender == address(marketContract), "wrong sender L");
     require(token.owner() == address(this), "not token owner");
 
-    uint256 tokenSupplyToBurn = token.balanceOf(address(marketContract)).div(100).mul(burnPercent);
+    uint256 tokenSupplyToBurn = token.balanceOf(address(marketContract)).mul(burnPercent).div(100);
     token.burn(msg.sender, tokenSupplyToBurn);
 
     transferTokenOwnership();
@@ -53,6 +52,7 @@ contract MilestoneBurn is IMilestone {
   
   function finishMilestone() public override {
     require(msg.sender == address(marketContract), "wrong sender F");
+
     selfdestruct(payable(deployer));
   }
 }

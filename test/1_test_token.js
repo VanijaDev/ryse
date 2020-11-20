@@ -44,44 +44,46 @@ contract("TestToken", function (accounts) {
     });
   });
 
-  // describe("burn", function () {
-  //   it("should fail if not owner", async function () {
-  //     await expectRevert(token.burn(MARKET.address, 20, { from: accounts[3] }), "Ownable: caller is not the owner");
-  //   });
+  describe("burn", function () {
+    it("should fail if not owner", async function () {
+      await expectRevert(token.burn(MARKET.address, 20, { from: accounts[0] }), "Ownable: caller is not the owner");
+    });
 
-  //   it("should fail if provided address has not enough tokens", async function () {
-  //     await expectRevert(token.burn(accounts[3], 20, {from:MARKET.address}), "not enough tokens");
-  //   });
+    it("should fail if provided address has not enough tokens", async function () {
+      await expectRevert(token.burn(accounts[3], 20, {from:MARKET.address}), "not enough tokens");
+    });
 
-  //   it("should sub correct token amount from provided address", async function () {
-  //     let balanceBefore = await token.balanceOf.call(MARKET.address);
-  //     let tokensToBurn = balanceBefore.mul(new BN("2")).div(new BN("100"));
-  //     await token.burn(MARKET.address, tokensToBurn, {from:MARKET.address});
-  //     // let balanceAfter = await token.balanceOf.call(MARKET.address);
+    it("should sub correct token amount from provided address", async function () {
+      let token_loc = await TestToken.new();
 
-  //     // let correctBalanceAfter = balanceBefore.sub(tokensToBurn);
-  //     // assert.equal(0, balanceAfter.cmp(correctBalanceAfter), "wrong balance after burn");
-  //   });
+      let tokensToBurn = new BN("52 000");  // 260000 * 0.2
+      await token_loc.burn(DEPLOYER, tokensToBurn, { from: DEPLOYER });
+      let balanceAfter = await token_loc.balanceOf.call(DEPLOYER);
 
-  //   it("should sub correct token amount from total supply", async function () {
-  //     let marketBalanceBefore = await token.balanceOf.call(MARKET.address);
-  //     let totalSupplyBefore = await token.totalSupply.call();
-  //     let tokensToBurn = marketBalanceBefore.mul(new BN("2")).div(new BN("100"));
-  //     await token.burn(MARKET.address, tokensToBurn);
-  //     let totalSupplyAfter = await await token.totalSupply.call();
+      let correctBalanceAfter = new BN("208 000");  // 260000 - 52 000
+      assert.equal(0, balanceAfter.cmp(correctBalanceAfter), "wrong balance after burn");
+    });
 
-  //     let correctTotalSupplyAfter = totalSupplyBefore.sub(tokensToBurn);
-  //     assert.equal(0, totalSupplyAfter.cmp(correctTotalSupplyAfter), "wrong totalSupply after burn");
-  //   });
+    it("should sub correct token amount from total supply", async function () {
+      let token_loc = await TestToken.new();
 
-  //   it("should emit BurnTokens", async function () {
-  //     let balanceBefore = await token.balanceOf.call(MARKET.address);
-  //     let tokensToBurn = balanceBefore.mul(new BN("2")).div(new BN("100"));
-  //     const receipt = await token.burn(MARKET.address, tokensToBurn);
+      let tokensToBurn = new BN("52 000");  // 260000 * 0.2
+      await token_loc.burn(DEPLOYER, tokensToBurn, { from: DEPLOYER });
+      let balanceAfter = await token_loc.totalSupply.call();
 
-      // expectEvent(receipt, 'BurnTokens', {
-      //   tokens: tokensToBurn.toString()
-      // });
-  //   });
-  // });
+      let correctBalanceAfter = new BN("248 000");  // 300000 - 52 000
+      assert.equal(0, balanceAfter.cmp(correctBalanceAfter), "wrong balance after burn");
+    });
+
+    it("should emit BurnTokens", async function () {
+      let token_loc = await TestToken.new();
+
+      let tokensToBurn = new BN("52 000");  // 260000 * 0.2
+      let receipt = await token_loc.burn(DEPLOYER, tokensToBurn, { from: DEPLOYER });
+
+      expectEvent(receipt, 'BurnTokens', {
+        tokens: tokensToBurn.toString()
+      });
+    });
+  });
 });
